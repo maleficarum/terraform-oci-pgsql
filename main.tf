@@ -17,7 +17,7 @@ resource "oci_psql_db_system" "example_db" {
 
     password_details {
       password      = var.db_password
-      password_type = "PLAIN_TEXT"
+      password_type = "PLAIN_TEXT"# gitleaks:allow
     }
   }
 
