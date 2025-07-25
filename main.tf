@@ -1,5 +1,11 @@
-resource "oci_psql_db_system" "example_db" {
+resource "oci_identity_compartment" "compute_compartment" {
   compartment_id = var.compartment_id
+  description    = "Compartment for DB resources"
+  name           = "database"
+}
+
+resource "oci_psql_db_system" "pgsql_db" {
+  compartment_id = oci_identity_compartment.compute_compartment.id
   display_name   = var.instance_configuration.name
   shape          = var.instance_configuration.shape
 
