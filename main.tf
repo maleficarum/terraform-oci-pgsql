@@ -1,13 +1,24 @@
-resource "oci_psql_db_system" "example_db" {
+resource "oci_identity_compartment" "compute_compartment" {
   compartment_id = var.compartment_id
+  description    = "Compartment for DB resources"
+  name           = "database"
+}
+
+resource "oci_psql_db_system" "pgsql_db" {
+  compartment_id = oci_identity_compartment.compute_compartment.id
   display_name   = var.instance_configuration.name
   shape          = var.instance_configuration.shape
+
+  instances_details {
+    description  = "node-${var.instance_configuration.name}"
+    display_name = "${var.instance_configuration.name}-instance"
+  }
 
   storage_details {
     is_regionally_durable = var.instance_configuration.storage_is_regional
     system_type           = var.instance_configuration.storage_type
-    #availability_domain  = data.oci_identity_availability_domains.ads.availability_domains[0].name
-    iops = var.instance_configuration.iops
+    availability_domain   = var.instance_configuration.storage_is_regional == false ? data.oci_identity_availability_domains.ad.availability_domains[0].name : null
+    iops                  = var.instance_configuration.iops
   }
 
   db_version = var.instance_configuration.version
@@ -16,8 +27,8 @@ resource "oci_psql_db_system" "example_db" {
     username = "admin" # Default admin username
 
     password_details {
-      password      = var.db_password
-      password_type = "PLAIN_TEXT"# gitleaks:allow
+      password      = data.vault_generic_secret.pgsql.data["password"]
+      password_type = "PLAIN_TEXT" # gitleaks:allow
     }
   }
 
