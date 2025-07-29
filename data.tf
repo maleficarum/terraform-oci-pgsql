@@ -3,4 +3,6 @@ data "oci_identity_availability_domains" "ad" {
   compartment_id = var.compartment_id
 }
 
-#pwd=Ax98p.@
+data "vault_generic_secret" "pgsql" {
+  path = "alpura/${var.application_name}/${var.environment}/pgsql"
+}

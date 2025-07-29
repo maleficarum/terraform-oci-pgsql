@@ -12,12 +12,6 @@ variable "instance_configuration" {
   description = "Instance configuration"
 }
 
-variable "db_password" {
-  type        = string
-  description = "The database password"
-}
-
-
 variable "subnet" {
   type        = string
   description = "The ID of the target subnet"
@@ -31,4 +25,20 @@ variable "compartment_id" {
 variable "environment" {
   type        = string
   description = "The deployed compartment"
+}
+
+variable "application_name" {
+  type        = string
+  default     = "General"
+  description = "The application name that will be deployed over this resource"
+}
+
+variable "vault_token" {
+  type        = string
+  description = "The token to access the vault"
+}
+
+variable "vault_host" {
+  type        = string
+  description = "The vault host with port"
 }
